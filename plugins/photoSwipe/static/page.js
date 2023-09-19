@@ -126,7 +126,13 @@ define(function(require, exports) {
 		
 				shareEl: true,
 				shareButtons: [
-					//{id:'facebook', label:'Facebook', url:'https://www.facebook.com/sharer/sharer.php?u={{url}}'},
+					//{id:'facebook', label:'Facebook', url:'https://www.facebook.com/sharer/sharer.php?u={{raw_image_url}}'},
+					{ 
+						id: 'customShare', // Provide a unique ID for your custom button
+						label: 'Custom Share', // Label for the button
+						url: '{{raw_image_url}}',
+						customShare: true
+					},
 					{id:'open', label:"查看原图", url:'{{raw_image_url}}', download:false},
 					{id:'download', label:LNG.download, url:'{{raw_image_url}}', download:true}
 				],
