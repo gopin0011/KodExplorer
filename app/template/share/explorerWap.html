@@ -3,9 +3,66 @@
 	<link href="<?php echo STATIC_PATH;?>style/wap/app_explorer.css?ver=<?php echo KOD_VERSION;?>" rel="stylesheet"/>
 </head>
 <body>
+	<div class="init-loading"><div><img src="<?php echo STATIC_PATH;?>images/common/loading_simple.gif?v=<?php echo KOD_VERSION;?>"/></div></div>
+	<div class="panel-menu">
+		<div class="panel-hd">
+			<span class="my-avator"> 
+			<?php
+				$avatar = STATIC_PATH.'images/common/pic.jpg';
+				$name   = $_SESSION['kodUser']['name'];
+				if($_SESSION['kodUser']['avatar']){
+					$avatar = $_SESSION['kodUser']['avatar'];
+				}
+				if($_SESSION['kodUser']['nickName']){
+					$name = $_SESSION['kodUser']['nickName'];
+				}
+				echo '<img src="'.$avatar.'"/>';
+			?>
+			</span>
+			<div><h3 class="name"><?php echo clear_html($name);?></h3></div>
+		</div>
+		<ul class="left-menu-path"></ul>
+	</div>
 	<div class="frame-main">
+		<div class="panel-mask"></div>
 		<div class="frame-header">
-			<div class="title"><?php echo clear_html($shareInfo['name']);?></div>
+			<div class="tool tool-menu-left">
+				<div class="menu"><i class="font-icon icon-reorder"></i></div>
+			</div>
+
+			<?php 
+				$config = $GLOBALS['config'];
+				$subMenu = '';
+				foreach ($config['settingSystem']['menu'] as $key=>$value) {
+					if ($value['use']!='1') continue;
+					$has = ST==$value['name']?'this':'';
+					$target = " target='_self'" ;
+					if($value['target']=='1' || $value['target'] == '_blank'){
+						$target = " target='_blank'" ;
+					}
+					$name = $value['name'];
+					if(LNG('ui_'.$name) != 'ui_'.$name){
+						$name = "<i class='font-icon menu-".$value['name']."'></i><span>".LNG('ui_'.$name).'</span>';
+					}
+					if($value['icon']){
+						$name = $value['icon'].'<span>'.LNG($value['name']).'</span>';
+					}
+					$subMenu .= "<li><a class='topbar-menu-sub ".$has."' href='".urldecode($value['url'])."'"
+							 .$target.">".urldecode($name)."</a></li>";
+				}
+			?>
+			<?php if($subMenu){?>
+			<div class="menu-group fl tool tool-submenu">
+				<button class="topbar-menu" id="topbar-submenu" data-toggle="dropdown">
+					<i class="icon-home"></i>
+				</button>
+				<ul class="dropdown-menu topbar-submenu pull-left animated menuShow" role="menu" aria-labelledby="topbar-submenu">
+					<?php echo $subMenu;?>
+				</ul>
+			</div>
+			<?php } ?>
+
+			<div class="title"><?php echo LNG('kod_name');?></div>
 			<div class="menu-group">
 				<div class="btn-list-icon"><i class="font-icon icon-home"></i></div>
 			</div>
@@ -21,18 +78,57 @@
 
 		<div class="file-menu">
 			<div class="file-action-menu hidden">
-				<div class='action-menu' data-action="action-download"><i class="font-icon icon-info"></i><?php echo LNG('download');?></div>
-				<div class='action-menu' data-action="action-share-open">
+				<div class="action-menu" data-action="action-copy">
 					<span class="content">
-						<i class="font-icon icon-share"></i><?php echo LNG('open');?>
+						<i class="font-icon icon-copy"></i><?php echo LNG('copy');?>
 					</span>
 				</div>
-				<div class="menu-close"><i class="font-icon icon-ellipsis-horizontal"></i></div>
+				<div class="action-menu" data-action="action-cute">
+					<span class="content">
+						<i class="font-icon icon-cut"></i><?php echo LNG('cute');?>
+					</span>
+				</div>
+				<div class='action-menu' data-action="action-share">
+					<span class="content">
+						<i class="font-icon icon-share"></i><?php echo LNG('share');?>
+					</span>
+				</div>
+				<div class='action-menu' data-action="action-rname">
+					<span class="content">
+						<i class="font-icon icon-pencil"></i><?php echo LNG('rename');?>
+					</span>
+				</div>
+				<div class='action-menu' data-action="action-download">
+					<span class="content">
+						<i class="font-icon icon-cloud-download"></i><?php echo LNG('download');?>
+					</span>
+				</div>
+				<div class='action-menu' data-action="action-customshare">
+					<span class="content">
+						<i class="font-icon icon-share"></i><?php echo 'Custom Share';?>
+					</span>
+				</div>
+				<div class='action-menu' data-action="action-info">
+					<span class="content">
+						<i class="font-icon icon-info"></i><?php echo LNG('info');?>
+					</span>
+				</div>
+				<div class="action-menu" data-action="action-remove">
+					<span class="content">
+						<i class="font-icon icon-trash"></i><?php echo LNG('remove');?>
+					</span>
+				</div>
+				<div class="menu-close">
+					<span class="content">
+						<i class="font-icon icon-ellipsis-horizontal"></i>
+					</span>
+				</div>
 				<div style="clear:both"></div>
 			</div>
 		</div>
 		<?php include(TEMPLATE.'common/footer.html');?>
 	</div><!-- / frame-main end-->
+
 	<div class="toolbar-menu">
 		<button class="menu-plus tool tool-menu-right-btn" data-toggle="dropdown"></button>
 		<ul class="dropdown-menu tool-menu-right pull-right animated menuShow" role="menu" >
@@ -48,11 +144,8 @@
 				<i class="font-icon icon-search"></i><?php echo LNG('search');?></a></li>
 		</ul>
 	</div>
-	<script type="text/javascript">
+	<script type="text/javascript" >
 		G.thisPath = "<?php echo clear_html($dir);?>";
-		G.user = "<?php echo clear_html($_GET['user']);?>";
-		G.sid = "<?php echo clear_html($_GET['sid']);?>";
-		G.shareInfo = <?php echo json_encode($shareInfo);?>;
 		seajs.use("<?php echo STATIC_JS;?>/src/explorerWap/main");
 	</script>
 </body>
