@@ -1,3 +1,8 @@
+function test(url,G){
+	console.log(G);
+	window.open(url, "pswp_share", "scrollbars=yes,resizable=yes,toolbar=no,location=yes,width=550,height=420,top=100,left=" + (window.screen ? Math.round(screen.width / 2 - 275) : 100)), '' || '', !1;
+}
+
 kodReady.push(function(){
 	kodApp.add({
 		name:"DPlayer",
@@ -7,8 +12,10 @@ kodReady.push(function(){
 		icon:'{{pluginHost}}static/images/icon.png',
 		callback:function(path,ext){
 			var music = ['mp3','wav','aac','m4a','oga','ogg','webma'];
+			var appStatic = "{{pluginHost}}static/";
 			if(isWap() && G.ACT != 'file'){ //移动端，非视频文件分享页面用跳转方式打开
-				return window.open(core.path2url(path));
+				// return test(core.path2url(path),G);
+				// return window.open(core.path2url(path));
 			}
 			var vedio = {
 				url:core.path2url(path),
@@ -16,7 +23,6 @@ kodReady.push(function(){
 				path:path,
 				ext:ext
 			};
-			var appStatic = "{{pluginHost}}static/";
     		var top = ShareData.frameTop();
     		top.require.async(appStatic+'page.js',function(app){
     		    app.play(appStatic,vedio);
@@ -58,6 +64,7 @@ kodReady.push(function(){
 			}
 			if(!checkAuth(path)) return;			
 			if(isWap()){
+				console.log('open media');
 				window.location.href = url;
 			}else{
 				window.open(url);
